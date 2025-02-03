@@ -1,5 +1,5 @@
-from flask import Flask, jsonify, g, current_app
-import sqlite3
+from flask import Flask,jsonify
+from .routes import app_routes  # 导入路由
 
 def create_app():
     app = Flask(__name__)
@@ -7,7 +7,10 @@ def create_app():
     
     # 注册错误处理器
     register_error_handlers(app)
-    
+
+    # 注册路由
+    app.register_blueprint(app_routes)  # 注册 Blueprint 路由
+
     return app
 
 # 错误处理函数

@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 from app.models import create_user, get_user_by_id, update_user, delete_user
 
-app = Flask(__name__)
+app_routes = Blueprint('app_routes', __name__)
 
-@app.route('/create_user', methods=['POST'])
+@app_routes.route('/create_user', methods=['POST'])
 def add_user():
     try:
         data = request.json
@@ -17,20 +17,20 @@ def add_user():
     except Exception as e:
         return jsonify({"status": "error", "message": "Internal Server Error"}), 500
 
-@app.route('/get_user/<int:user_id>', methods=['GET'])
+@app_routes.route('/get_user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     user = get_user_by_id(user_id)
     if user:
         return jsonify(dict(user))
     return jsonify({"message": "User not found!"}), 404
 
-@app.route('/update_user/<int:user_id>', methods=['PUT'])
+@app_routes.route('/update_user/<int:user_id>', methods=['PUT'])
 def update_user_info(user_id):
     data = request.json
     update_user(user_id, data['username'], data['email'], data['password'])
     return jsonify({"message": "User updated successfully!"})
 
-@app.route('/delete_user/<int:user_id>', methods=['DELETE'])
+@app_routes.route('/delete_user/<int:user_id>', methods=['DELETE'])
 def delete_user_info(user_id):
     delete_user(user_id)
     return jsonify({"message": "User deleted successfully!"})
